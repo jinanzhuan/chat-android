@@ -9,6 +9,7 @@ import com.hyphenate.chat.EMClient;
 /**
  * Created by zhangsong on 17-9-15.
  */
+@Deprecated
 public class EMFCMTokenRefreshService extends FirebaseInstanceIdService {
     private static final String TAG = "FCMTokenRefreshService";
 
@@ -20,4 +21,6 @@ public class EMFCMTokenRefreshService extends FirebaseInstanceIdService {
         // Important, send the fcm token to the server
         EMClient.getInstance().sendFCMTokenToServer(token);
     }
+
+
 }

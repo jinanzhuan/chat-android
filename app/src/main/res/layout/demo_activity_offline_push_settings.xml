@@ -61,7 +61,7 @@
         android:layout_height="@dimen/em_common_item_height"
         app:switchItemTitle="@string/push_use_fcm"
         app:switchItemTitleSize="14sp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:background="@color/white"/>
 
 </LinearLayout>

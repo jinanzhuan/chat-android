@@ -139,17 +139,20 @@
         </provider>
 
         <!-- FCM required start -->
-        <service android:name=".common.fcm.EMFCMMSGService">
+        <service android:name=".common.fcm.EMFCMMSGService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service android:name=".common.fcm.EMFCMTokenRefreshService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
+        <meta-data
+            android:name="firebase_messaging_auto_init_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="false" />
+
         <!-- FCM required end -->
 
         <!--华为 HMS Config-->

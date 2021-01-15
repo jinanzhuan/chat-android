@@ -177,7 +177,7 @@ public class OfflinePushSettingsActivity extends BaseInitActivity implements Eas
 
     private void setOptionsVisible(boolean visible) {
         itemPushTimeRange.setVisibility(visible ? View.VISIBLE : View.GONE);
-        rlCustomServer.setVisibility(visible ? View.VISIBLE : View.GONE);
+        //rlCustomServer.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private void showTimePicker() {
