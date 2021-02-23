@@ -56,6 +56,7 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
     private Drawable eyeOpen;
     private Drawable eyeClose;
     private boolean isClick;
+    private boolean notSetAppKey;
 
     @Override
     protected int getLayoutId() {
@@ -102,6 +103,7 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        LoginViewModel loginViewModel = new ViewModelProvider(mContext).get(LoginViewModel.class);
         mFragmentViewModel = new ViewModelProvider(this).get(LoginFragmentViewModel.class);
         mFragmentViewModel.getLoginObservable().observe(this, response -> {
             parseResource(response, new OnResourceParseCallback<EaseUser>(true) {
@@ -136,6 +138,20 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
                 }
             });
 
+        });
+        loginViewModel.getAppKeyObservable().observe(this, response -> {
+            parseResource(response, new OnResourceParseCallback<Boolean>() {
+                @Override
+                public void onSuccess(@Nullable Boolean data) {
+                    notSetAppKey = false;
+                }
+
+                @Override
+                public void onError(int code, String message) {
+                    super.onError(code, message);
+                    notSetAppKey = true;
+                }
+            });
         });
     }
 
@@ -177,6 +193,10 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_login_register :
+                if(notSetAppKey) {
+                    showToast(R.string.em_login_not_set_appkey);
+                    return;
+                }
                 mViewModel.clearRegisterInfo();
                 mViewModel.setPageSelect(1);
                 break;
@@ -190,6 +210,10 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
                 break;
             case R.id.btn_login:
                 hideKeyboard();
+                if(notSetAppKey) {
+                    showToast(R.string.em_login_not_set_appkey);
+                    return;
+                }
                 loginToServer();
                 break;
         }

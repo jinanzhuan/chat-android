@@ -38,6 +38,7 @@
     <string name="em_login_btn_info_incomplete">用户名或者密码不能为空</string>
     <string name="em_login_failed">登录失败</string>
     <string name="em_login_agreement">同意《环信服务条款》与《环信隐私协议》</string>
+    <string name="em_login_not_set_appkey">请检查是否设置了环信AppKey</string>
 
     <string name="em_register_btn">注\u0020册</string>
     <string name="em_register_password_confirm_hint">确认密码</string>
@@ -552,4 +553,7 @@
     <string name="demo_call_options_watermark">水印</string>
     <string name="demo_call_options_set_video_resolution">设置视频分辨率：%1$s</string>
     <string name="demo_grid_file_null">没有获取到文件内容</string>
+
+    <string name="demo_error_not_find_application_info">找不到ApplicationInfo</string>
+    <string name="demo_error_not_find_meta">请确认meta属性写在清单文件里的application节点以内</string>
 </resources>

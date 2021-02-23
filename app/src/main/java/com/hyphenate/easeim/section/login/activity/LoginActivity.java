@@ -55,6 +55,7 @@ public class LoginActivity extends BaseInitActivity {
             }
 
         });
+        viewModel.getAppKeyInfo(mContext);
     }
 
     private void replace(BaseFragment fragment) {

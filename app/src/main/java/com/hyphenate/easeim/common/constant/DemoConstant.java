@@ -74,4 +74,6 @@ public interface DemoConstant extends EaseConstant {
     String SYSTEM_MESSAGE_NAME = "name";
     String SYSTEM_MESSAGE_INVITER = "inviter";
 
+    String EASEMOB_APPKEY = "EASEMOB_APPKEY";
+
 }
