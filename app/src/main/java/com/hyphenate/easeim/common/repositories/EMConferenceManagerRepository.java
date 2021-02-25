@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.easeim.DemoApplication;
 import com.hyphenate.easeim.common.constant.DemoConstant;
@@ -23,13 +22,13 @@ import java.util.List;
 
 public class EMConferenceManagerRepository extends BaseEMRepository {
 
+    private String[] existMember;
     public LiveData<Resource<List<KV<String, Integer>>>> getConferenceMembers(String groupId) {
         return new NetworkOnlyResource<List<KV<String, Integer>>>() {
 
             @Override
             protected void createCall(@NonNull ResultCallBack<LiveData<List<KV<String, Integer>>>> callBack) {
                 EaseThreadManager.getInstance().runOnIOThread(() -> {
-                    List<EMConferenceMember> existMembers = getConferenceManager().getConferenceMemberList();
                     List<String> contactList = new ArrayList<>();
                     if(TextUtils.isEmpty(groupId)) {
                         // 直接从本地加载所有的联系人
@@ -60,8 +59,7 @@ public class EMConferenceManagerRepository extends BaseEMRepository {
                                 && !it.equals(DemoConstant.CHAT_ROOM)
                                 && !it.equals(DemoConstant.CHAT_ROBOT)
                                 && !it.equals(getCurrentUser())) {
-
-                            if(memberContains(it, existMembers) != null) {
+                            if(memberContains(it)){
                                 contacts.add(new KV<>(it, 2));
                             }else {
                                 contacts.add(new KV<>(it, 0));
@@ -76,12 +74,19 @@ public class EMConferenceManagerRepository extends BaseEMRepository {
         }.asLiveData();
     }
 
-    private EMConferenceMember memberContains(String name, List<EMConferenceMember> existMembers) {
-        for (EMConferenceMember item : existMembers) {
-            if(TextUtils.equals(EasyUtils.useridFromJid(item.memberName), name)) {
-                return item;
+    public void SetExistMembers(String[] members) {
+        existMember = members;
+    }
+
+
+    private boolean memberContains(String name) {
+        if(existMember != null && existMember.length > 0){
+            for (String userId : existMember) {
+                if(TextUtils.equals(EasyUtils.useridFromJid(userId), name)) {
+                    return true;
+                }
             }
         }
-        return null;
+        return false;
     }
 }

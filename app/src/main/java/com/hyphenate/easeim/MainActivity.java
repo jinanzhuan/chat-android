@@ -15,6 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import easemob.hyphenate.calluikit.base.EaseCallType;
+import easemob.hyphenate.calluikit.ui.EaseMultipleVideoActivity;
+import easemob.hyphenate.calluikit.ui.EaseVideoCallActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
@@ -23,10 +26,10 @@ import com.hyphenate.easeim.common.constant.DemoConstant;
 import com.hyphenate.easeim.common.enums.SearchType;
 import com.hyphenate.easeim.common.permission.PermissionsManager;
 import com.hyphenate.easeim.common.permission.PermissionsResultAction;
+import com.hyphenate.easeim.common.utils.PushUtils;
 import com.hyphenate.easeim.section.MainViewModel;
 import com.hyphenate.easeim.section.base.BaseInitActivity;
 import com.hyphenate.easeim.section.chat.ChatPresenter;
-import com.hyphenate.easeim.section.conference.ConferenceActivity;
 import com.hyphenate.easeim.section.contact.activity.GroupContactManageActivity;
 import com.hyphenate.easeim.section.contact.fragment.ContactListFragment;
 import com.hyphenate.easeim.section.conversation.ConversationListFragment;
@@ -40,6 +43,8 @@ import com.hyphenate.easeui.ui.base.EaseBaseFragment;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 
 import java.lang.reflect.Method;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 
 public class MainActivity extends BaseInitActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -91,7 +96,6 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_video :
-                ConferenceActivity.startConferenceCall(mContext, null);
                 break;
             case R.id.action_group :
                 GroupPrePickActivity.actionStart(mContext);
@@ -166,6 +170,20 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         ChatPresenter.getInstance().init();
         // 获取华为 HMS 推送 token
         HMSPushHelper.getInstance().getHMSToken(this);
+
+        //判断是否为来电推送
+        if(PushUtils.isRtcCall){
+            if (EaseCallType.getfrom(PushUtils.type) != EaseCallType.CONFERENCE_CALL) {
+                    EaseVideoCallActivity callActivity = new EaseVideoCallActivity();
+                    Intent intent = new Intent(getApplicationContext(), callActivity.getClass()).addFlags(FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+                } else {
+                    EaseMultipleVideoActivity callActivity = new EaseMultipleVideoActivity();
+                    Intent intent = new Intent(getApplication().getApplicationContext(), callActivity.getClass()).addFlags(FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+            }
+            PushUtils.isRtcCall  = false;
+        }
     }
 
     private void initViewModel() {
@@ -360,6 +378,12 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     protected void onResume() {
         super.onResume();
         DemoHelper.getInstance().showNotificationPermissionDialog();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
